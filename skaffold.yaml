@@ -1,0 +1,57 @@
+apiVersion: skaffold/v2beta15
+kind: Config
+metadata:
+  name: pop-stats
+build:
+  local: 
+    push: false
+  artifacts:
+  - image: pop-stats
+    context: .
+    docker:
+      dockerfile: docker/pythonalpine.Dockerfile
+    sync:
+      infer:
+        - 'app.py'
+        - 'templates/*.html'
+        - 'static/*.*'
+deploy:
+  kubectl:
+portForward:
+- resourceType: deployment
+  resourceName: pop-stats-deployment
+  port: 8080 
+  localPort: 8080
+profiles:
+  - name: packs
+    build:
+      local: 
+        push: false
+      artifacts:
+      - image: pop-stats
+        buildpacks:
+          builder: gcr.io/buildpacks/builder
+        #sync:
+        #  manual:
+        #    - src: 'app.py'
+        #     dest: /layers/google.python.pip/pip/lib/python3.8/site-packages/flask/
+        #    - src: 'templates/*.html'
+        #      dest: /layers/google.python.pip/pip/lib/python3.8/site-packages/flask/templates
+        #    - src: 'static/*.*'
+        #      dest: /layers/google.python.pip/pip/lib/python3.8/site-packages/flask/static 
+  - name: distroless
+    build:
+      local:
+        push: false
+      artifacts:
+      - image: pop-stats
+        docker:
+          dockerfile: docker/distroless.Dockerfile
+  - name: prod
+    build:
+      googleCloudBuild:
+        projectId: 
+      artifacts:
+      - image: pop-stats
+        docker:
+          dockerfile: docker/distroless.Dockerfile

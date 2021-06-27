@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pop-stats-service
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+  type: LoadBalancer
+  selector:
+    app: pop-stats
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pop-stats-deployment
+  labels:
+    app: pop-stats
+spec:
+#  strategy: {}
+  selector:
+    matchLabels:
+      app: pop-stats
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: pop-stats
+    spec:
+      containers:
+      - name: pop-stats
+        image: pop-stats:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DEV_EXT_IP
+          value: "97.113.223.41"
