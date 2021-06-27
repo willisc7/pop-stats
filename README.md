@@ -1,13 +1,11 @@
-# us-covid-stats
+# Population stats
 
-Web dashboard app that presents COVID-19 infection and death counts by U.S. county, search interface via ZipCode. Written in Python using Flask, javascript, bootstrap CSS.
-
-Uses the [Mulesoft COVID-19 APIs](https://www.mulesoft.com/exchange/68ef9520-24e9-4cf2-b2f5-620025690913/covid19-data-tracking-api/). Note there are some known problems with this API at time of writing. For instance, it returns no data for zipcodes in NYC (e.g. 10001, 10005).
+Simple web app that pulls population data based on address queries. 
 
 Population data gathered from the U.S. Census Bureau [Population Estimate API](https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html).
 
 ## Building, Deploying & Running
-This is a straightfoward Python Flask application which can be run in several ways including locally via python, as a Docker container, or in Google Cloud Run.
+This is a straightfoward Python Flask application which can be run in several ways including locally via python, as a Docker container, k8s, or Google Cloud Run.
 
 ### via Python
 
@@ -21,7 +19,7 @@ The app will be available on localhost port 8080 (e.g., `http://0.0.0.0:8080`)
 
 From the root dir of the app:
 
-`$ docker build -t covidstats -f docker/pythonalpine.Dockerfile . && docker run --rm -p 8080:8080 -e PORT=8080 covidstats`
+`$ docker build -t popstats -f docker/pythonalpine.Dockerfile . && docker run --rm -p 8080:8080 -e PORT=8080 popstats`
 
 The app will be available on localhost port 8080 (e.g., `http://0.0.0.0:8080`)
 
